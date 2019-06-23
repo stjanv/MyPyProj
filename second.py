@@ -9,27 +9,32 @@ class Proxy(object):
         self.status = 'Ok'
         self.used_count = 0
 
+    def __str__(self):
+        return f"ip = {self.ip}, port = {self.port}"
+
 
 class ProxyServer(object):
     ok = []
     banned = []
 
-    def next_proxy(self):
-        if self.ok != []:
-            return self.ok.pop(self.ok[0])
+    @staticmethod
+    def next_proxy():
+        if ProxyServer.ok:
+            return ProxyServer.ok.pop(0)
         else:
-            if self.banned != []:
-                return self.banned.pop(self.banned[0])
+            if ProxyServer.banned:
+                return ProxyServer.banned.pop(0)
             else:
                 return 'ProxyServer is empty'
 
-    def back_proxy(self, proxy: Proxy):
+    @staticmethod
+    def back_proxy(proxy):
         proxy.used_count += 1
         proxy.used_time = datetime.now()
         if proxy.status == 'Ok':
-            self.ok.append(Proxy)
+            ProxyServer.ok.append(proxy)
         elif proxy.status == 'baned':
-            self.banned.append(proxy)
+            ProxyServer.banned.append(proxy)
 
 
 with open('./ip_list.txt', 'r', encoding='utf-8') as file:
@@ -38,3 +43,11 @@ with open('./ip_list.txt', 'r', encoding='utf-8') as file:
         t = tuple(item for item in ip_list[i].split(':'))
         proxy = Proxy(t[0], t[1])
         ProxyServer.ok.append(proxy)
+    file.close()
+
+proxy_to_use = ProxyServer.next_proxy()
+print(proxy_to_use)
+proxy = Proxy("192.168.0.1","3312")
+ProxyServer.back_proxy(proxy)
+print(ProxyServer.ok[len(ProxyServer.ok) - 1])
+

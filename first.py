@@ -11,13 +11,12 @@ class Car:
         self.cost = cost
 
     def __lt__(self, other):
-        if self.cost < other.cost:
-            return self.cost < other.cost
-        elif self.cost == other.cost and self.engine_capasity != other.engine_capasity:
+        if self.cost == other.cost and self.engine_capasity != other.engine_capasity:
             return self.engine_capasity < other.engine_capasity
         elif self.cost == other.cost and self.engine_capasity == other.engine_capasity:
             return self.fuel_supply < other.fuel_supply
-
+        else:
+            return self.cost < other.cost
     def __str__(self):
         return f'engine_capasity: {self.engine_capasity} ,mileage: {self.mileage} ,color: {self.color} ,max_speed: {self.max_speed} ,fuel_supply: {self.fuel_supply} ,cost: {self.cost}'
 
